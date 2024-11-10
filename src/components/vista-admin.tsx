@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useRouter } from 'next/navigation'
 
 interface ProductoBajoStock {
   id: number;
@@ -13,6 +14,7 @@ interface ProductoBajoStock {
 }
 
 export default function VistaAdmin() {
+  const router = useRouter();
   const [stockMinimo, setStockMinimo] = useState('')
   const [fechaReporte, setFechaReporte] = useState('')
   const [reporteVentas, setReporteVentas] = useState<{ total_ventas: string, cantidad_ventas: number } | null>(null)
@@ -51,9 +53,27 @@ export default function VistaAdmin() {
     })
   }
 
+  function close() {
+    fetch('/api/quit-cookie', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+    }).then(res => {
+      if (res.status === 200) {
+        router.push('/')
+      }
+    }).catch(err => {
+      console.error('Error al cerrar sesión:', err)
+    }
+    )
+  }
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Panel de Administración</h1>
+      <Button onClick={close}>Cerrar</Button>
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Generar Reporte de Ventas</CardTitle>

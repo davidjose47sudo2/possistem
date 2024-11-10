@@ -80,7 +80,7 @@ export default function VistaCajero() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id_venta: idVenta, metodo_pago: metodoPago, monto_pagado:monto })
+      body: JSON.stringify({ id_venta: idVenta, metodo_pago: metodoPago, monto_pagado: monto })
     }).then(res => {
       if (res.status === 201) {
         console.log('Pago registrado con éxito.')
@@ -108,10 +108,27 @@ export default function VistaCajero() {
     console.log('Registrar pago:', { idVenta, metodoPago, monto })
   }
 
+  function close() {
+    fetch('/api/quit-cookie', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+    }).then(res => {
+      if (res.status === 200) {
+        router.push('/')
+      }
+    }).catch(err => {
+      console.error('Error al cerrar sesión:', err)
+    }
+    )
+  }
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Panel de Cajero</h1>
-      <Button onClick={() => router.push('/')}>Cerrar</Button>
+      <Button onClick={close}>Cerrar</Button>
       <Tabs defaultValue="venta">
         <TabsList>
           <TabsTrigger value="venta">Registrar Venta</TabsTrigger>

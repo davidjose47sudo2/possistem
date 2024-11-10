@@ -7,8 +7,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { HiExclamationTriangle } from 'react-icons/hi2'
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -26,15 +28,21 @@ export default function Login() {
         // Asegúrate de que el error sea una cadena
         setError("usuario o contraseña incorrectos")
       } else {
-        console.log('Login correcto:', data)
-        // Guardar el token en localStorage
-        //localStorage.setItem('token', data.token)
-        if (data.role == 2) {
-          window.location.href = '/admin/home'
-        }
-        else if (data.role == 3) {
-          window.location.href = '/home'
-        }
+        fetch('/api/set-cookie', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ id_usuario: data.id_usuario, role: data.role })
+        }).then(res => {
+          if (data.role == 2) {
+            router.push('/admin/home')
+          }
+          else if (data.role == 3) {
+            router.push('/home')
+          }
+        }).catch(err => { setError('Ocurrió un error al iniciar sesión. Intente de nuevo.') })
+
       }
     }).catch(err => {
       setError('Ocurrió un error al iniciar sesión. Intente de nuevo.')
