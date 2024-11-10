@@ -34,17 +34,17 @@ export default function Login() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ id_usuario: data.id_usuario, role: data.role })
-        }).then(res => {
+        }).then( () => {
           if (data.role == 2) {
             router.push('/admin/home')
           }
           else if (data.role == 3) {
             router.push('/home')
           }
-        }).catch(err => { setError('Ocurrió un error al iniciar sesión. Intente de nuevo.') })
+        }).catch(() => { setError('Ocurrió un error al iniciar sesión. Intente de nuevo.') })
 
       }
-    }).catch(err => {
+    }).catch(() => {
       setError('Ocurrió un error al iniciar sesión. Intente de nuevo.')
     })
   }
