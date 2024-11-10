@@ -33,7 +33,7 @@ export default function Login() {
           window.location.href = '/admin/home'
         }
         else if (data.role == 3) {
-          window.location.href = '/ventas/home'
+          window.location.href = '/home'
         }
       }
     }).catch(err => {

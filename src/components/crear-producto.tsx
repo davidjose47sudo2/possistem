@@ -16,6 +16,24 @@ export default function CrearProducto() {
     e.preventDefault()
     // Aquí iría la lógica para llamar al SP crear_producto
     console.log('Crear producto:', { nombre, descripcion, precio, stock })
+
+    fetch('/api/admin/crear_producto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ nombre, descripcion, precio, stock})
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        alert('Producto creado exitosamente')
+      })
+      .catch(error => {
+        console.error('Error:', error)
+        alert('Ocurrió un error al crear el producto')
+      })
+
   }
 
   return (
