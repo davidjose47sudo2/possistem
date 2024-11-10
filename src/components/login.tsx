@@ -15,16 +15,30 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-
-    // Aquí iría la lógica real de autenticación
-    // Por ahora, simularemos un inicio de sesión exitoso si el email contiene "admin" o "cajero"
-    if (email.includes('admin') || email.includes('cajero')) {
-      console.log('Inicio de sesión exitoso:', { email, password })
-      // Aquí redirigirías al usuario a la página correspondiente (admin o cajero)
-    } else {
-      setError('Credenciales inválidas. Por favor, intente de nuevo.')
-    }
+    fetch('/api/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, contrasena: password })
+    }).then(res => res.json()).then(data => {
+      if (data.error) {
+        // Asegúrate de que el error sea una cadena
+        setError("usuario o contraseña incorrectos")
+      } else {
+        console.log('Login correcto:', data)
+        // Guardar el token en localStorage
+        //localStorage.setItem('token', data.token)
+        if (data.role == 2) {
+          window.location.href = '/admin/home'
+        }
+        else if (data.role == 3) {
+          window.location.href = '/ventas/home'
+        }
+      }
+    }).catch(err => {
+      setError('Ocurrió un error al iniciar sesión. Intente de nuevo.')
+    })
   }
 
   return (
